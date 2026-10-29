@@ -1,0 +1,12 @@
+<section class="page"><a class="back-link" routerLink="/ordenes"><app-icon name="back" /> Volver a órdenes</a>
+  @if (cargando()) { <div class="panel"><app-estado tipo="loading" /></div> }
+  @else if (error()) { <div class="panel"><app-estado tipo="error" titulo="No pudimos abrir la orden" [mensaje]="error()" (reintentar)="cargar()" /></div> }
+  @else if (orden(); as o) {
+    <div class="page-heading"><div><span class="eyebrow">DETALLE DE ATENCIÓN</span><h1>Orden {{ o.numero }}</h1><p>Registrada el {{ o.fecha | date:'dd/MM/yyyy' }} a las {{ o.fecha | date:'HH:mm' }} por {{ o.usuarioRegistro }}.</p></div><div class="heading-actions"><span class="badge" [class.registered]="o.estado === 'REGISTRADA'" [class.cancelled]="o.estado === 'ANULADA'">{{ o.estado === 'REGISTRADA' ? 'Registrada' : 'Anulada' }}</span>@if (puedeAnular(o)) { <button class="btn btn-secondary" type="button" (click)="anulando.set(true)"><app-icon name="close" /> Anular orden</button> }</div></div>
+    @if (o.motivoAnulacion) { <div class="alert alert-info"><app-icon name="alert" /><span><strong>Motivo de anulación:</strong> {{ o.motivoAnulacion }}</span></div> }
+    <div class="panel"><div class="panel-heading"><h2>Información de la orden</h2><span class="code">{{ o.numero }}</span></div><dl class="detail-info"><div><dt>Vehículo</dt><dd><span class="plate">{{ o.placa }}</span></dd></div><div><dt>Cliente</dt><dd>{{ o.clienteNombre }}</dd></div><div><dt>Kilometraje registrado</dt><dd>{{ o.kilometraje | number }} km</dd></div><div><dt>Servicios incluidos</dt><dd>{{ o.detalles.length }} líneas</dd></div></dl>
+      <div class="table-scroll"><table><thead><tr><th>Código</th><th>Servicio</th><th>Cantidad</th><th>Precio unitario</th><th>Subtotal</th></tr></thead><tbody>@for (d of o.detalles; track d.id) { <tr><td class="code">{{ d.codigo }}</td><td class="cell-title">{{ d.servicio }}</td><td>{{ d.cantidad }}</td><td>{{ d.precioUnitario | currency:'PEN':'symbol':'1.2-2' }}</td><td class="money">{{ d.subtotal | currency:'PEN':'symbol':'1.2-2' }}</td></tr> }</tbody></table></div><div class="detail-total"><span>Total de la orden</span><strong>{{ o.total | currency:'PEN':'symbol':'1.2-2' }}</strong></div>
+    </div>
+    @if (anulando()) { <app-anular-orden [orden]="o" (cerrar)="anulando.set(false)" (anulado)="anulada($event)" /> }
+  }
+</section>
