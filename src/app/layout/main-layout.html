@@ -1,0 +1,25 @@
+<div class="app-shell">
+  @if (abierto()) { <button class="nav-overlay" aria-label="Cerrar menú" (click)="abierto.set(false)"></button> }
+  <aside class="sidebar" [class.mobile-open]="abierto()">
+    <div class="sidebar-intro"><span class="eyebrow">TU ESPACIO DE TRABAJO</span><strong>Panel de gestión</strong></div>
+    <div class="nav-section">OPERACIÓN DEL TALLER</div>
+    <nav aria-label="Navegación principal">@for (item of menu(); track item.ruta) { <a [routerLink]="item.ruta" routerLinkActive="active"><app-icon [name]="item.icono" /><span>{{ item.titulo }}</span><app-icon class="nav-chevron" name="chevron" /></a> }</nav>
+    <div class="sidebar-bottom"><div class="workshop-label"><span class="foot-mark">A</span><div><strong>AutoAndes</strong><small>Orden en cada servicio.</small></div></div><span class="session-badge"><span></span> Sesión activa</span></div>
+  </aside>
+  <div class="main-wrapper">
+    <header class="topbar"><div class="topbar-left"><button type="button" class="icon-btn mobile-menu" aria-label="Abrir menú" (click)="abierto.set(true)"><app-icon name="menu" /></button><a routerLink="/servicios" class="brand header-brand"><span class="brand-mark">A<span></span></span><span><strong>Auto<span class="brand-light">Andes</span></strong></span></a><span class="breadcrumb">Mi taller <app-icon name="chevron" /><strong>{{ titulo() }}</strong></span></div>
+      <div class="topbar-right"><a class="btn btn-primary btn-small header-new" routerLink="/ordenes/nueva" *siPermiso="'ORDEN_REGISTRAR'">
+        <app-icon name="plus" /> Nueva orden</a>
+        <div class="user-info">
+          <span class="avatar">{{ iniciales() }}</span><span class="user-copy">
+          <strong>{{ auth.sesion()?.nombreCompleto }}</strong>
+          <small>{{ auth.sesion()?.roles?.join(' · ') }}</small>
+        </span></div>
+        <button type="button" class="icon-btn logout-btn" aria-label="Cerrar sesión" title="Cerrar sesión" (click)="auth.cerrar()"><app-icon name="logout" />
+          <span class="logout-copy">Cerrar sesión</span>
+        </button></div>
+    </header>
+    <main id="contenido">@if (avisos.mensaje()) { <div class="toast" role="status"><app-icon name="check" /><span>{{ avisos.mensaje() }}</span><button type="button" aria-label="Cerrar aviso" (click)="avisos.mensaje.set('')"><app-icon name="close" /></button></div> }<router-outlet /></main>
+    <footer class="app-footer"><span>AutoAndes Web</span><span>Orden en cada servicio.</span></footer>
+  </div>
+</div>

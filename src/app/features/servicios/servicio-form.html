@@ -1,0 +1,17 @@
+<section class="page">
+  <a class="back-link" routerLink="/servicios"><app-icon name="back" /> Volver a servicios</a>
+  <div class="form-heading"><span class="eyebrow">CATÁLOGO DEL TALLER</span><h1>{{ id === null ? 'Nuevo servicio' : 'Editar servicio' }}</h1><p>Define la atención, su tarifa y el tiempo estimado.</p></div>
+  @if (cargando()) { <div class="panel form-panel"><app-estado tipo="loading" /></div> }
+  @else if (cargaFallida()) { <div class="panel form-panel"><app-estado tipo="error" titulo="No pudimos abrir el servicio" [mensaje]="error()" (reintentar)="cargar()" /></div> }
+  @else { <form class="panel form-panel" [formGroup]="form" (ngSubmit)="guardar()" novalidate><fieldset [disabled]="guardando()"><div class="form-content">
+    @if (error()) { <div class="alert alert-error" role="alert"><app-icon name="alert" />{{ error() }}</div> }
+    <h2 class="form-section-title"><span class="section-number">01</span> Información del servicio</h2>
+    <div class="form-grid">
+      <div class="field"><label for="codigo">Código <span class="required">*</span></label><input id="codigo" formControlName="codigo" placeholder="SRV-009" maxlength="7" /><app-field-error [control]="form.controls.codigo" campo="codigo" [backend]="campos()" patron="Usa el formato SRV-000." /></div>
+      <div class="field"><label for="nombre">Nombre del servicio <span class="required">*</span></label><input id="nombre" formControlName="nombre" placeholder="Ej. Inspección general" maxlength="80" /><app-field-error [control]="form.controls.nombre" campo="nombre" [backend]="campos()" /></div>
+      <div class="field"><label for="precio">Precio (S/) <span class="required">*</span></label><input id="precio" type="number" min="0.01" max="99999999.99" step="0.01" formControlName="precio" placeholder="0.00" /><app-field-error [control]="form.controls.precio" campo="precio" [backend]="campos()" patron="Ingresa un precio con hasta dos decimales." /></div>
+      <div class="field"><label for="duracionMin">Duración estimada (minutos) <span class="required">*</span></label><input id="duracionMin" type="number" min="15" max="480" step="1" formControlName="duracionMin" placeholder="60" /><span class="field-hint">Entre 15 y 480 minutos.</span><app-field-error [control]="form.controls.duracionMin" campo="duracionMin" [backend]="campos()" patron="Ingresa minutos enteros." /></div>
+      <div class="field full"><label class="toggle-label" for="activo"><input id="activo" type="checkbox" formControlName="activo" /><span>Disponible para nuevas órdenes<small>Desactiva el servicio cuando no se esté ofreciendo.</small></span></label><app-field-error [control]="form.controls.activo" campo="activo" [backend]="campos()" /></div>
+    </div>
+  </div><div class="form-footer"><a class="btn btn-secondary" routerLink="/servicios">Cancelar</a><button class="btn btn-primary" type="submit" [disabled]="guardando()">@if (guardando()) { <span class="spinner"></span> }<app-icon name="check" />{{ guardando() ? 'Guardando…' : 'Guardar servicio' }}</button></div></fieldset></form> }
+</section>

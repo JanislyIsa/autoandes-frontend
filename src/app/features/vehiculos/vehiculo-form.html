@@ -1,0 +1,17 @@
+<section class="page">
+  <a class="back-link" routerLink="/vehiculos"><app-icon name="back" /> Volver a vehículos</a>
+  <div class="form-heading"><span class="eyebrow">CLIENTES Y VEHÍCULOS</span><h1>{{ id === null ? 'Nuevo vehículo' : 'Editar vehículo' }}</h1><p>Vincula el vehículo a su cliente para comenzar su historial.</p></div>
+  @if (cargando()) { <div class="panel form-panel"><app-estado tipo="loading" /></div> }
+  @else if (cargaFallida()) { <div class="panel form-panel"><app-estado tipo="error" titulo="No pudimos abrir el formulario" [mensaje]="error()" (reintentar)="cargar()" /></div> }
+  @else { <form class="panel form-panel" [formGroup]="form" (ngSubmit)="guardar()" novalidate><fieldset [disabled]="guardando()"><div class="form-content">
+    @if (error()) { <div class="alert alert-error" role="alert"><app-icon name="alert" />{{ error() }}</div> }
+    <h2 class="form-section-title"><span class="section-number">01</span> Información del vehículo</h2>
+    <div class="form-grid">
+      <div class="field"><label for="placa">Placa <span class="required">*</span></label><input id="placa" formControlName="placa" placeholder="ABC-123" maxlength="7" /><span class="field-hint">Tres letras mayúsculas, guion y tres números.</span><app-field-error [control]="form.controls.placa" campo="placa" [backend]="campos()" patron="Usa el formato ABC-123." /></div>
+      <div class="field"><label for="anio">Año <span class="required">*</span></label><input id="anio" type="number" min="1990" max="2027" step="1" formControlName="anio" placeholder="2020" /><app-field-error [control]="form.controls.anio" campo="anio" [backend]="campos()" patron="Ingresa un año entero entre 1990 y 2027." /></div>
+      <div class="field"><label for="marca">Marca <span class="required">*</span></label><input id="marca" formControlName="marca" placeholder="Ej. Toyota" maxlength="40" /><app-field-error [control]="form.controls.marca" campo="marca" [backend]="campos()" /></div>
+      <div class="field"><label for="modelo">Modelo <span class="required">*</span></label><input id="modelo" formControlName="modelo" placeholder="Ej. Yaris" maxlength="40" /><app-field-error [control]="form.controls.modelo" campo="modelo" [backend]="campos()" /></div>
+      <div class="field full"><label for="clienteId">Cliente propietario <span class="required">*</span></label><select id="clienteId" formControlName="clienteId"><option [ngValue]="null">Selecciona un cliente</option>@for (c of clientes(); track c.id) { <option [ngValue]="c.id">{{ c.nombres }} · {{ c.documento }}</option> }</select><span class="field-hint">Selecciona el cliente al que pertenece este vehículo.</span><app-field-error [control]="form.controls.clienteId" campo="clienteId" [backend]="campos()" /></div>
+    </div>
+  </div><div class="form-footer"><a class="btn btn-secondary" routerLink="/vehiculos">Cancelar</a><button class="btn btn-primary" type="submit" [disabled]="guardando()">@if (guardando()) { <span class="spinner"></span> }<app-icon name="check" />{{ guardando() ? 'Guardando…' : 'Guardar vehículo' }}</button></div></fieldset></form> }
+</section>
