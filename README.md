@@ -98,3 +98,5 @@ del navegador y recarga una pantalla de datos. La API responderá 401 y la SPA v
 La sesión se guarda por pestaña, apropiado para los equipos compartidos del caso.
 
 El proyecto se desarrolla en `examen-a-suarez` y se integra en `develop` y `main` para publicación.
+
+La integración final necesita el backend iniciado. [Registro HTTP sin tokens](docs/cierre-autenticacion.json).

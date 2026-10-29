@@ -6,7 +6,8 @@
   "scripts": {
     "start": "ng serve",
     "build": "ng build",
-    "test": "node --experimental-strip-types --test tests/*.test.ts"
+    "test": "node --experimental-strip-types --test tests/*.test.ts",
+    "test:integracion": "node scripts/verificar-autenticacion.mjs"
   },
   "dependencies": {
     "@angular/common": "22.2.0",
@@ -22,6 +23,7 @@
     "@angular/build": "22.2.0",
     "@angular/cli": "22.2.0",
     "@angular/compiler-cli": "22.2.0",
-    "typescript": "6.0.3"
+    "typescript": "6.0.3",
+    "esbuild": "0.28.2"
   }
 }

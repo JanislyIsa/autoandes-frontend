@@ -1,0 +1,68 @@
+{
+  "fecha": "2026-10-29T15:59:05.027Z",
+  "tipo": "Integración de AuthService e interceptores reales con HTTP real. Almacenamiento y Router controlados en Node; no es una prueba de interfaz de navegador.",
+  "casos": [
+    {
+      "caso": "Token alterado",
+      "resultado": "401 real; sesión eliminada; navegación al login con returnUrl",
+      "navegacion": {
+        "commands": [
+          "/login"
+        ],
+        "options": {
+          "queryParams": {
+            "motivo": "invalida",
+            "returnUrl": "/ordenes"
+          },
+          "replaceUrl": true
+        }
+      }
+    },
+    {
+      "caso": "Permiso insuficiente",
+      "resultado": "403 real; sesión conservada; sin navegación al login"
+    },
+    {
+      "caso": "Vencimiento",
+      "resultado": "Temporizador real de AuthService elimina la sesión; reloj de prueba adelantado 3601 segundos",
+      "navegacion": {
+        "commands": [
+          "/login"
+        ],
+        "options": {
+          "queryParams": {
+            "motivo": "expirada",
+            "returnUrl": "/ordenes"
+          },
+          "replaceUrl": true
+        }
+      }
+    }
+  ],
+  "peticiones": [
+    {
+      "metodo": "GET",
+      "ruta": "/api/v1/clientes",
+      "status": 401,
+      "respuesta": {
+        "timestamp": "2026-10-29T10:59:03.6583979",
+        "status": 401,
+        "error": "Unauthorized",
+        "mensaje": "Autenticación requerida o token inválido",
+        "ruta": "/api/v1/clientes"
+      }
+    },
+    {
+      "metodo": "GET",
+      "ruta": "/api/v1/reportes/ingresos-por-servicio",
+      "status": 403,
+      "respuesta": {
+        "timestamp": "2026-10-29T10:59:03.7679964",
+        "status": 403,
+        "error": "Forbidden",
+        "mensaje": "No tiene permisos para realizar esta operación",
+        "ruta": "/api/v1/reportes/ingresos-por-servicio"
+      }
+    }
+  ]
+}
